@@ -93,6 +93,5 @@ def run():
     root = tk.Tk()
     app = MyGui(root)
     root.mainloop()
-
     
 run()
