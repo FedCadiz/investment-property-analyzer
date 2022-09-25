@@ -1,7 +1,5 @@
-from cgitb import text
 import tkinter as tk
-from tkinter import CENTER, HORIZONTAL, Label, font
-from tkinter.tix import COLUMN
+from tkinter import CENTER, HORIZONTAL
 from analyzer import Analyzer
 import threading
 
