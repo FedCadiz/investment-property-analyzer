@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import CENTER, HORIZONTAL, Label, font
 from tkinter.tix import COLUMN
 from analyzer import Analyzer
-import concurrent.futures
 import threading
 
 
