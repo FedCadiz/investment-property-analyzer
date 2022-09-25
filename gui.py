@@ -18,8 +18,8 @@ class MyGui:
         self.dplabel.config(text=("${:0,.2f}".format(downPayment)))
     
     def analyze(self):
-        self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
-        # self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.scale.get()),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()))
+        # self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
+        self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.scale.get()),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()))
 
         def analyze_window():     
             self.analyzeWindow = tk.Toplevel()
