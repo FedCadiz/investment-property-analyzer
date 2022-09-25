@@ -7,7 +7,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-
 import time
 
 class Analyzer:
@@ -26,21 +25,12 @@ class Analyzer:
         self.totalmonthlyRent = self.rentPrice * int(self.units)
 
     def calculate(self):
-        # self.interestRate = self.interestRate/12
-        # self.monthlyMortgage = int(self.loan*self.interestRate*((1+self.interestRate)**self.length)/(((1+self.interestRate)**self.length)-1))
-        # return self.monthlyMortgage
-
+        start = time.perf_counter()
         options = Options()
         options.headless = True
         PATH = "C:\Program Files (x86)\chromedriver.exe"
         driver = webdriver.Chrome(PATH,options=options)
         driver.get("https://www.rocketmortgage.com/learn/property-taxes-by-state")
-        try:
-            check = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "b-Content"))
-            )
-        except:
-            driver.quit()
         rows = driver.find_elements("tag name","tbody")
         index = -1
         for row in rows:
@@ -114,6 +104,8 @@ class Analyzer:
 
 
         driver.close()
+        end = time.perf_counter()
+        print(f"Finished in {round(end-start, 2)} seconds")
 
 
 
