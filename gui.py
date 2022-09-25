@@ -1,7 +1,10 @@
+from cgitb import text
 import tkinter as tk
 from tkinter import CENTER, HORIZONTAL, Label, font
 from tkinter.tix import COLUMN
 from analyzer import Analyzer
+import concurrent.futures
+import threading
 
 
 
@@ -16,28 +19,34 @@ class MyGui:
         self.dplabel.config(text=("${:0,.2f}".format(downPayment)))
     
     def analyze(self):
-        # self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.scale.get()),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()))
         self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
-        self.analyze.calculate()
-        self.analyzeWindow = tk.Toplevel()
-        self.analyzeFrame = tk.Frame(self.analyzeWindow)
-        self.analyzeFrame.pack()
-        self.a_title = tk.Label(self.analyzeFrame,text="Analysis Results",font=("helvetica",25,"bold"))
-        self.a_title.grid(row=0,columnspan=3)
+        # self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.scale.get()),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()))
 
-        self.label = tk.Label(self.analyzeFrame,text=f"Monthly Payment: ${self.analyze.monthlyPayment}",font=(self.font))
-        self.label.grid(row=1,column=0)
+        def analyze_window():     
+            self.analyzeWindow = tk.Toplevel()
+            self.analyzeFrame = tk.Frame(self.analyzeWindow)
+            self.analyzeFrame.pack()
+            self.a_title = tk.Label(self.analyzeFrame,text="Analysis Results",font=("helvetica",25,"bold"))
+            self.a_title.grid(row=0,columnspan=3)
 
-        self.label = tk.Label(self.analyzeFrame,text=f"Gross Annual Rent: ${self.analyze.totalRevenue}",font=(self.font))
-        self.label.grid(row=1,column=1)
+            self.monthly_label = tk.Label(self.analyzeFrame,text="-",font=(self.font))
+            self.monthly_label.grid(row=1,column=0)
 
-        self.label = tk.Label(self.analyzeFrame,text=f"ROI: {format(self.analyze.totalReturn,'.2%')}",font=(self.font))
-        self.label.grid(row=1,column=2)
-        
-        
+            self.gar_label = tk.Label(self.analyzeFrame,text="Loading",font=(self.font))
+            self.gar_label.grid(row=1,column=1,padx=25)
 
-        
+            self.roi_label = tk.Label(self.analyzeFrame,text="-",font=(self.font))
+            self.roi_label.grid(row=1,column=2)
 
+        def execute_analyze():
+            self.analyze.calculate()
+            self.monthly_label.config(text=f"Monthly Payment: ${self.analyze.monthlyPayment}")
+            self.gar_label.config(text=f"Gross Annual Rent: ${self.analyze.totalRevenue}")
+            self.roi_label.config(text=f"ROI: {format(self.analyze.totalReturn,'.2%')}")
+        t1 = threading.Thread(target=analyze_window)
+        t2 = threading.Thread(target=execute_analyze)
+        t1.start()
+        t2.start()
 
     def __init__(self,master):
         windowFrame = tk.Frame(master)
@@ -93,5 +102,5 @@ def run():
     root = tk.Tk()
     app = MyGui(root)
     root.mainloop()
-    
+
 run()
