@@ -10,12 +10,12 @@ class Analyzer:
         self.city = (cityState.split(","))[0]
         self.state = (cityState.split(","))[1]
         self.price = price
-        self.downPayent = downPayment
+        self.downPayment = downPayment
         self.interestRate = interestRate
         self.units = units
         self.length = length
         self.loan = int(float(price) - (float(downPayment)*.01))
-        self.homeInsurance = 0
+        
 
         self.rentPrice = 1500
         self.totalmonthlyRent = self.rentPrice * int(self.units)
@@ -46,7 +46,7 @@ class Analyzer:
 
         downPayment = driver.find_element("id","cdownpayment")
         downPayment.clear()
-        downPayment.send_keys(self.downPayent)
+        downPayment.send_keys(self.downPayment)
 
         length = driver.find_element("id","cloanterm")
         length.clear()
@@ -64,7 +64,7 @@ class Analyzer:
         homeInsurance.clear()
         homeInsurance.send_keys(2000)
 
-        if self.downPayent < 20:
+        if self.downPayment < 20:
             pmi = driver.find_element("id","cpmi")
             pmi.clear()
             pmi.send_keys(int(self.loan*.01))
@@ -88,16 +88,20 @@ class Analyzer:
         self.totalRevenue = self.principalBalance + Decimal(self.totalmonthlyRent * 12)
         print(f"Total Revenue: {self.totalRevenue}")
 
-        self.netProfit = self.totalRevenue - self.monthlyPayment
+        self.netProfit = self.totalRevenue - (self.monthlyPayment*12)
 
-        self.totalReturn = self.netProfit / self.price
-        print(f"ROI: {format(self.totalReturn,'.2%')}")
+        self.roi = self.netProfit / self.price
+        print(f"ROI: {format(self.roi,'.2%')}")
 
-        if self.totalReturn >= .07:
+        if self.roi >= .07:
             print("This rental property has a good return on investment")
         else:
             print("The return on investment is too low")
 
+        self.monthlyPayment = "${:0,.2f}".format(self.monthlyPayment)
+        self.totalRevenue = "${:0,.2f}".format(self.totalRevenue)
+        self.price = "${:0,.2f}".format(self.price)
+        self.netProfit = "${:0,.2f}".format(self.netProfit)
 
         driver.close()
         end = time.perf_counter()
