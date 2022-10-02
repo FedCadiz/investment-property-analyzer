@@ -4,6 +4,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import time
+import chromedriver_autoinstaller as chromedriver
+chromedriver.install()
 
 class Analyzer:
     def __init__(self,cityState,price,downPayment,interestRate,units,length):
@@ -24,8 +26,8 @@ class Analyzer:
         start = time.perf_counter()
         options = Options()
         options.headless = True
-        PATH = "C:\Program Files (x86)\chromedriver.exe"
-        driver = webdriver.Chrome(PATH,options=options)
+        chromedriver.install()
+        driver = webdriver.Chrome(options=options)
         driver.get("https://www.rocketmortgage.com/learn/property-taxes-by-state")
         rows = driver.find_elements("tag name","tbody")
         index = -1
