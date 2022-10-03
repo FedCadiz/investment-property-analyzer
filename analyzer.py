@@ -1,5 +1,6 @@
 from decimal import Decimal
 from re import sub
+from unicodedata import decimal
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
@@ -19,7 +20,7 @@ class Analyzer:
         self.loan = int(float(price) - (float(downPayment)*.01))
         
 
-        self.rentPrice = 1500
+        self.rentPrice = 1000
         self.totalmonthlyRent = self.rentPrice * int(self.units)
 
     def calculate(self):
@@ -92,7 +93,8 @@ class Analyzer:
 
         self.netProfit = self.totalRevenue - (self.monthlyPayment*12)
 
-        self.roi = self.netProfit / self.price
+        self.roi = self.netProfit / Decimal((self.downPayment * .01) * self.price)
+        print(Decimal((self.downPayment * .01) * self.price))
         print(f"ROI: {format(self.roi,'.2%')}")
 
         if self.roi >= .07:
@@ -104,6 +106,7 @@ class Analyzer:
         self.totalRevenue = "${:0,.2f}".format(self.totalRevenue)
         self.price = "${:0,.2f}".format(self.price)
         self.netProfit = "${:0,.2f}".format(self.netProfit)
+        print(self.netProfit)
 
         driver.close()
         end = time.perf_counter()
@@ -113,5 +116,5 @@ class Analyzer:
 
 
 
-# test = Analyzer("Garden Grove,California",500000,10,5,2,30)
+# test = Analyzer("Garden Grove,California",500000,20,7,3,30)
 # test.calculate()
