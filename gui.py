@@ -1,3 +1,4 @@
+from sre_parse import State
 import tkinter as tk
 import customtkinter
 from analyzer import Analyzer
@@ -21,7 +22,7 @@ class MyGui:
             
         self.downpaymentdollar = "${:0,.2f}".format((self.downpayment / 100) * int(self.lpspinbox.get()))
         # self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
-        self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.downpayment),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()))
+        self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.downpayment),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()),int(self.customentry.get()))
         self.loading = True
 
 
@@ -127,13 +128,12 @@ class MyGui:
         self.label = customtkinter.CTkLabel(self.leftwindowFrame,text="Rent Pricing", text_font=self.font)
         self.label.grid(row=13,column=1,pady=(10,5))
 
-        self.rentvar = tk.StringVar(value="Moderate")
+        self.rentvar = tk.StringVar(value="Custom")
 
         def custom_rent():
-            self.entry = customtkinter.CTkEntry(self.leftwindowFrame,text_font=(self.font),justify=tk.CENTER,width=100)
-            self.entry.grid(row=15,column=2,pady=(5,0))
+            self.customentry.configure(state="normal")
         def selected_rent():
-            self.entry.destroy()
+            self.customentry.configure(state="disabled")
         self.conservativerent = customtkinter.CTkRadioButton(self.leftwindowFrame,text="Conservative",text_font=("Helvetica",15),variable=self.rentvar,value="Conservative",command=selected_rent)
         self.conservativerent.grid(row=14,column=0,padx=(5,0))
         
@@ -146,9 +146,11 @@ class MyGui:
         self.customrent = customtkinter.CTkRadioButton(self.leftwindowFrame,text="Custom",text_font=("Helvetica",15),variable=self.rentvar,value="Custom",command=custom_rent)
         self.customrent.grid(row=15,column=1,pady=(10,0))
 
+        self.customentry = customtkinter.CTkEntry(self.leftwindowFrame,text_font=(self.font),justify=tk.CENTER,width=100)
+        self.customentry.grid(row=16,column=1,pady=(5,0))
 
         self.button = customtkinter.CTkButton(self.leftwindowFrame,text="Analyze",text_font=("helvetica",20,"bold"),command=self.analyze)
-        self.button.grid(row=16,column=1,pady=(25,50))
+        self.button.grid(row=17,column=1,pady=(25,50))
 
         # ============== Create Right Frame ============== #  
         self.rightwindowFrame = customtkinter.CTkFrame(self.windowFrame)
