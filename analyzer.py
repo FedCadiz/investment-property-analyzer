@@ -9,7 +9,7 @@ import chromedriver_autoinstaller as chromedriver
 chromedriver.install()
 
 class Analyzer:
-    def __init__(self,cityState,price,downPayment,interestRate,units,length):
+    def __init__(self,cityState,price,downPayment,interestRate,units,length,rent):
         self.city = (cityState.split(","))[0]
         self.state = (cityState.split(","))[1]
         self.price = price
@@ -20,7 +20,7 @@ class Analyzer:
         self.loan = int(float(price) - (float(downPayment)*.01))
         
 
-        self.rentPrice = 1000
+        self.rentPrice = rent
         self.totalmonthlyRent = self.rentPrice * int(self.units)
 
     def calculate(self):
