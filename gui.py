@@ -25,6 +25,16 @@ class MyGui:
         self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.downpayment),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()),int(self.customentry.get()))
         self.loading = True
 
+        self.purchase_price.configure(text=" ")
+        self.down_payment.configure(text=" ")
+        self.interest_rate.configure(text=" ")
+        self.mortgage_length.configure(text=" ")
+        self.monthly_label.configure(text=" ")
+        self.units_rented.configure(text=" ")
+        self.gar_label.configure(text=" ")
+        self.roi_label.configure(text=" ")
+        self.city_state.configure(text=" ")
+        self.net_profit.configure(text=" ")
 
         def analyze_window():     
             while self.loading == True:
@@ -62,6 +72,7 @@ class MyGui:
             self.urspinbox.insert(0,0)
             self.mlspinbox.delete(0,tk.END)
             self.mlspinbox.insert(0,15)
+            self.customentry.delete(0,tk.END)
                 
         t1 = threading.Thread(target=analyze_window)
         t2 = threading.Thread(target=execute_analyze)
