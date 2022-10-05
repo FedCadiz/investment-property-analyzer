@@ -1,4 +1,3 @@
-from sre_parse import State
 import tkinter as tk
 import customtkinter
 from analyzer import Analyzer
@@ -14,19 +13,25 @@ class MyGui:
 
     
     def analyze(self):
-        if "%" in self.dpspin.get():
-            self.downpayment = int(self.dpspin.get().split("%")[0])
-        elif "$" in self.dpspin.get():
-            self.downpayment = self.dpspin.get().split('$')[1]
-            self.downpayment = (int(self.downpayment) / int(self.lpspinbox.get())) * 100
-            
-        self.downpaymentdollar = "${:0,.2f}".format((self.downpayment / 100) * int(self.lpspinbox.get()))
+        if int(self.dpspin.get()) < 100 or "%" in self.dpspin.get():
+            if "%" in self.dpspin.get():
+                self.downpayment = int(self.dpspin.get().split("%")[0])
+            self.downpayment = self.dpspin.get()
+        elif int(self.dpspin.get()) > 100 or "$" in self.dpspin.get():
+            if "$" in self.dpspin.get():
+                self.downpayment = self.dpspin.get().split('$')[1]
+            self.downpayment = (int(self.dpspin.get()) / int(self.lpspinbox.get())) * 100
+
+        self.downpaymentdollar = "${:0,.2f}".format((int(self.downpayment) / 100) * int(self.lpspinbox.get()))
         # self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
         self.analyze = Analyzer(self.csentry.get(),int(self.lpspinbox.get()),int(self.downpayment),int(self.irentry.get()),int(self.urspinbox.get()),int(self.mlspinbox.get()),int(self.customentry.get()))
         self.loading = True
 
+        # ============== Exception Handling ============== #
+
+
         self.purchase_price.configure(text=" ")
-        self.down_payment.configure(text=" ")
+        self.down_payment_label.configure(text=" ")
         self.interest_rate.configure(text=" ")
         self.mortgage_length.configure(text=" ")
         self.monthly_label.configure(text=" ")
@@ -34,7 +39,7 @@ class MyGui:
         self.gar_label.configure(text=" ")
         self.roi_label.configure(text=" ")
         self.city_state.configure(text=" ")
-        self.net_profit.configure(text=" ")
+        self.net_profit.configure(text=" \n\n")
 
         def analyze_window():     
             while self.loading == True:
@@ -56,7 +61,7 @@ class MyGui:
             self.net_profit.configure(text=f"Annual Net Profit: \n{self.analyze.netProfit}")
             self.roi_label.configure(text=f"ROI: {format(self.analyze.roi,'.2%')}")
             self.purchase_price.configure(text=f"Purchase Price: \n{self.analyze.price}")
-            self.down_payment.configure(text=f"Down Payment: \n{self.analyze.downPayment}% | {self.downpaymentdollar}")
+            self.down_payment_label.configure(text=f"Down Payment: \n{self.analyze.downPayment}% | {self.downpaymentdollar}")
             self.interest_rate.configure(text=f"Interest Rate: \n{self.analyze.interestRate}%")
             self.mortgage_length.configure(text=f"Mortgage Length: \n{self.analyze.length} years")
             self.city_state.configure(text=f"Location: {self.analyze.city}, {self.analyze.state}")
@@ -99,7 +104,7 @@ class MyGui:
         # self.windowtitle = customtkinter.CTkLabel(self.leftwindowFrame,text="",text_font=("helvetica",25,"bold"))
         # self.windowtitle.grid(row=0,column=0,padx=10,pady=10,columnspan=3)
 
-        self.label = customtkinter.CTkLabel(self.leftwindowFrame,text="City,State",text_font=(self.font))
+        self.label = customtkinter.CTkLabel(self.leftwindowFrame,text="City, State",text_font=(self.font))
         self.label.grid(row=1,column=1,pady=(20,0))
 
         self.csentry = customtkinter.CTkEntry(self.leftwindowFrame,text_font=self.font,width=375)
@@ -112,7 +117,7 @@ class MyGui:
         self.lpspinbox.grid(row=4,column=0,columnspan=3)
 
 
-        self.label = customtkinter.CTkLabel(self.leftwindowFrame, text="Down Payment",text_font=(self.font))
+        self.label = customtkinter.CTkLabel(self.leftwindowFrame, text="Down Payment %|$",text_font=(self.font))
         self.label.grid(row=5,column=1,pady=(10,0))
         
         self.dpspin = customtkinter.CTkEntry(self.leftwindowFrame,text_font=(self.font),justify=tk.CENTER,width=250)
@@ -144,6 +149,7 @@ class MyGui:
         def custom_rent():
             self.customentry.configure(state="normal")
         def selected_rent():
+            self.customentry.delete(0,tk.END)
             self.customentry.configure(state="disabled")
         self.conservativerent = customtkinter.CTkRadioButton(self.leftwindowFrame,text="Conservative",text_font=("Helvetica",15),variable=self.rentvar,value="Conservative",command=selected_rent)
         self.conservativerent.grid(row=14,column=0,padx=(5,0))
@@ -173,8 +179,8 @@ class MyGui:
         self.purchase_price = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
         self.purchase_price.grid(row=1,column=0,padx=(30,0),columnspan=1)
 
-        self.down_payment = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
-        self.down_payment.grid(row=1,column=1,padx=10,columnspan=1)
+        self.down_payment_label = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
+        self.down_payment_label.grid(row=1,column=1,padx=10,columnspan=1)
 
         self.interest_rate = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
         self.interest_rate.grid(row=1,column=2,padx=(0,30),columnspan=1)
@@ -197,7 +203,7 @@ class MyGui:
         self.roi_label = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
         self.roi_label.grid(row=3,column=2,padx=(0,30))
 
-        self.city_state = customtkinter.CTkLabel(self.rightwindowFrame,text=" ",text_font=(self.font))
+        self.city_state = customtkinter.CTkLabel(self.rightwindowFrame,text=" \n\n",text_font=(self.font))
         self.city_state.grid(row=4,column=1,pady=50)
 
 def run():
