@@ -13,14 +13,15 @@ class MyGui:
 
     
     def analyze(self):
-        if int(self.dpspin.get()) < 100 or "%" in self.dpspin.get():
-            if "%" in self.dpspin.get():
-                self.downpayment = int(self.dpspin.get().split("%")[0])
-            self.downpayment = self.dpspin.get()
-        elif int(self.dpspin.get()) > 100 or "$" in self.dpspin.get():
-            if "$" in self.dpspin.get():
-                self.downpayment = self.dpspin.get().split('$')[1]
-            self.downpayment = (int(self.dpspin.get()) / int(self.lpspinbox.get())) * 100
+        if "%" in self.dpspin.get():
+            self.downpayment = int(self.dpspin.get().split("%")[0])
+        elif "$" in self.dpspin.get():
+            self.downpayment1 = self.dpspin.get().split('$')[1]
+        elif int(self.dpspin.get()) <= 100:
+                self.downpayment = self.dpspin.get()
+        elif int(self.dpspin.get()) > 100:
+            self.downpayment1 = int(self.dpspin.get())
+            self.downpayment = (int(self.downpayment1) / int(self.lpspinbox.get())) * 100
 
         self.downpaymentdollar = "${:0,.2f}".format((int(self.downpayment) / 100) * int(self.lpspinbox.get()))
         # self.analyze = Analyzer("Garden Grove,California",500000,10,5,2,30)
@@ -117,7 +118,7 @@ class MyGui:
         self.lpspinbox.grid(row=4,column=0,columnspan=3)
 
 
-        self.label = customtkinter.CTkLabel(self.leftwindowFrame, text="Down Payment %|$",text_font=(self.font))
+        self.label = customtkinter.CTkLabel(self.leftwindowFrame, text="Down Payment",text_font=(self.font))
         self.label.grid(row=5,column=1,pady=(10,0))
         
         self.dpspin = customtkinter.CTkEntry(self.leftwindowFrame,text_font=(self.font),justify=tk.CENTER,width=250)
